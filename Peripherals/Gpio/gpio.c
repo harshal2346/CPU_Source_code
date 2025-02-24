@@ -296,9 +296,9 @@ void gpio_common(uint8_t u8_pin, uint8_t u8_enable)
 	}
 
 	//*((uint32_t*)p_spare_gpio) = u16_gpio_pins;
-//	*((uint32_t*)p_common_gpio) = 0xFFFF;
-	*((uint32_t*)p_common_gpio) = 0x0000;
-	printf("Common gpio's enabled\r\n");
+	*((uint32_t*)p_common_gpio) = 0xFFFF;
+//	*((uint32_t*)p_common_gpio) = 0x0000;
+//	printf("Common gpio's enabled\r\n");
 }
 
 void gpio_spi_test(uint8_t u8_high)

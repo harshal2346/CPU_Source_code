@@ -157,33 +157,35 @@ typedef enum channels
 	e_COIL_5,
 	e_COIL_6,
 
-	e_SDCRM_1_V_1,
-	e_SDCRM_2_V_1,
-	e_SDCRM_3_V_1,
-	e_SDCRM_4_V_1,
-	e_SDCRM_5_V_1,
-	e_SDCRM_6_V_1,
-
-	e_SDCRM_1_V_2,
-	e_SDCRM_2_V_2,
-	e_SDCRM_3_V_2,
-	e_SDCRM_4_V_2,
-	e_SDCRM_5_V_2,
-	e_SDCRM_6_V_2,
-
 	e_SDCRM_1_C_1,
-	e_SDCRM_2_C_1,
-	e_SDCRM_3_C_1,
-	e_SDCRM_4_C_1,
-	e_SDCRM_5_C_1,
-	e_SDCRM_6_C_1,
-
+	e_SDCRM_1_V_1,
 	e_SDCRM_1_C_2,
+	e_SDCRM_1_V_2,
+
+	e_SDCRM_2_C_1,
+	e_SDCRM_2_V_1,
 	e_SDCRM_2_C_2,
+	e_SDCRM_2_V_2,
+
+	e_SDCRM_3_C_1,
+	e_SDCRM_3_V_1,
 	e_SDCRM_3_C_2,
+	e_SDCRM_3_V_2,
+
+	e_SDCRM_4_C_1,
+	e_SDCRM_4_V_1,
 	e_SDCRM_4_C_2,
+	e_SDCRM_4_V_2,
+
+	e_SDCRM_5_C_1,
+	e_SDCRM_5_V_1,
 	e_SDCRM_5_C_2,
+	e_SDCRM_5_V_2,
+
+	e_SDCRM_6_C_1,
+	e_SDCRM_6_V_1,
 	e_SDCRM_6_C_2,
+	e_SDCRM_6_V_2,
 
 	e_TRAVEL_1,
 	e_TRAVEL_2,

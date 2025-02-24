@@ -199,6 +199,9 @@ uint16_t farme_checksum(uint16_t* data_frame,uint16_t length_of_frame);
 void system_configuration();
 int config_hardware(uint8_t u8_slot,uint8_t u8_card_address);
 void dummy_hardware_config();
+void create_demoClose_shared_objects();
+void update_dummyDCRM_shared_objects();
+void update_dummyOpen_shared_objects();
 
 int opto_wait();
 
@@ -345,6 +348,13 @@ void *read_socket()
 //			write(rec_fd,u16_sock_tx,sizeof(u16_sock_rx));
 //			sleep(1);
 //		}
+		for(int count = 0 ; count < 10 ; count++)
+		{
+			gpio_Led_en(1);
+			usleep(500000);
+			gpio_Led_en(0);
+			usleep(500000);
+		}
 	}
 	else
 	{
@@ -466,11 +476,12 @@ void *read_socket()
 						case e_SIMPLE_OPEN :
 							printf("Test : e_SIMPLE_OPEN\r\n");
 							fflush(stdout);
+							sleep(5);
 							u16_sock_tx[1] = e_SIMPLE_OPEN;
 							u16_sock_tx[2] = 0xA5A5;
 							write(rec_fd,u16_sock_tx,sizeof(u16_sock_rx));
 							u8_valid_test = 1;
-							sleep(2);
+//							sleep(2);
 							u8_req_configured = e_REQ_TEST_SETTINGS;
 							u8_test_configured = e_SIMPLE_OPEN;
 
@@ -501,6 +512,11 @@ void *read_socket()
 							break;
 
 						case e_DCRM_CO :
+							/*	TODO : below function is added for Demo purpose remove after Demo
+							 * 	is over : HT
+							 */
+							update_dummyDCRM_shared_objects();
+
 							printf("Test : e_DCRM_CO\r\n");
 							u16_sock_tx[1] = e_DCRM_CO;
 							u16_sock_tx[2] = 0xA5A5;
@@ -512,6 +528,11 @@ void *read_socket()
 							break;
 
 						case e_TIMING_OPEN :
+							/*	TODO : below function is added for Demo purpose remove after Demo
+							 * 	is over : HT
+							 */
+							update_dummyOpen_shared_objects();
+
 							printf("Test : e_TIMING_OPEN\r\n");
 							u16_sock_tx[1] = e_TIMING_OPEN;
 							u16_sock_tx[2] = 0xA5A5;
@@ -523,6 +544,11 @@ void *read_socket()
 							break;
 
 						case e_TIMING_CLOSE :
+							/*	TODO : below function is added for Demo purpose remove after Demo
+							 * 	is over : HT
+							 */
+							create_demoClose_shared_objects();
+
 							printf("Test : e_TIMING_CLOSE\r\n");
 							u16_sock_tx[1] = e_TIMING_CLOSE;
 							u16_sock_tx[2] = 0xA5A5;
@@ -887,9 +913,9 @@ void *communication_slot_1()
 							{
 								cards_t[u16_boards].u8_ack_error = e_ERR;
 
-								sem_wait(sem_write_socket);
-								socket_resp(u8_test_configured,ERROR);
-								sem_post(sem_write_socket);
+//								sem_wait(sem_write_socket);
+//								socket_resp(u8_test_configured,ERROR);
+//								sem_post(sem_write_socket);
 
 								u16_boards++;
 								u8_req_count = 0;
@@ -906,9 +932,9 @@ void *communication_slot_1()
 							cards_t[u16_boards].u8_ack_error = e_ERR;
 
 							/*	send the Error response of activity on the socket */
-							sem_wait(sem_write_socket);
-							socket_resp(u8_test_configured,ERROR);
-							sem_post(sem_write_socket);
+//							sem_wait(sem_write_socket);
+//							socket_resp(u8_test_configured,ERROR);
+//							sem_post(sem_write_socket);
 
 							u16_boards++;
 							u8_req_count = 0;
@@ -2894,9 +2920,9 @@ void *communication_slot_4()
 								printf("Error Handshake Comm DB %d\r\n",u16_iteration);
 
 								/*	send the Error response of activity on the socket */
-								sem_wait(sem_write_socket);
-								socket_resp(u8_test_configured,ERROR);
-								sem_post(sem_write_socket);
+//								sem_wait(sem_write_socket);
+//								socket_resp(u8_test_configured,ERROR);
+//								sem_post(sem_write_socket);
 
 								u16_iteration++;
 								u8_req_count = 0;
@@ -2914,9 +2940,9 @@ void *communication_slot_4()
 							printf("Error Handshake Comm DB %d\r\n",u16_iteration);
 
 							/*	send the Error response of activity on the socket */
-							sem_wait(sem_write_socket);
-							socket_resp(u8_test_configured,ERROR);
-							sem_post(sem_write_socket);
+//							sem_wait(sem_write_socket);
+//							socket_resp(u8_test_configured,ERROR);
+//							sem_post(sem_write_socket);
 
 							u16_iteration++;
 							u8_req_count = 0;
@@ -2932,9 +2958,9 @@ void *communication_slot_4()
 
 						printf("Error Handshake Comm DB %d\r\n",u16_iteration);
 						/*	send the Error response of activity on the socket */
-						sem_wait(sem_write_socket);
-						socket_resp(u8_test_configured,ERROR);
-						sem_post(sem_write_socket);
+//						sem_wait(sem_write_socket);
+//						socket_resp(u8_test_configured,ERROR);
+//						sem_post(sem_write_socket);
 
 						u16_iteration++;
 						u8_req_count = 0;
@@ -3041,9 +3067,9 @@ void *communication_slot_4()
 							{
 								cards_t[u16_boards].u8_ack_error = e_ERR;
 
-								sem_wait(sem_write_socket);
-								socket_resp(u8_test_configured,ERROR);
-								sem_post(sem_write_socket);
+//								sem_wait(sem_write_socket);
+//								socket_resp(u8_test_configured,ERROR);
+//								sem_post(sem_write_socket);
 
 								u16_boards++;
 								u8_req_count = 0;
@@ -3059,9 +3085,9 @@ void *communication_slot_4()
 							cards_t[u16_boards].u8_ack_error = e_ERR;
 
 							/*	send the Error response of activity on the socket */
-							sem_wait(sem_write_socket);
-							socket_resp(u8_test_configured,ERROR);
-							sem_post(sem_write_socket);
+//							sem_wait(sem_write_socket);
+//							socket_resp(u8_test_configured,ERROR);
+//							sem_post(sem_write_socket);
 
 							u16_boards++;
 							u8_req_count = 0;
@@ -3127,6 +3153,16 @@ void *communication_slot_4()
 				socket_resp(OPTO_RECEPTION_SUCCESS,ACKNOWLEDGE);
 				sem_post(sem_write_socket);
 
+				if(u8_test_configured == e_SIMPLE_CLOSE)
+				{
+					break;
+				}
+
+				if(u8_test_configured == e_SIMPLE_OPEN)
+				{
+					break;
+				}
+
 				/*	here break should be implemented on the basis of which test is performed by the
 				 * 	user
 				 * 	if the test is of simple Open/Close the program execution should not go to
@@ -3154,15 +3190,89 @@ void *communication_slot_4()
 			 */
 
 			/*	Demo code starts here : HT */
-			sem_wait(sem_write_socket);
-			channel_data_rec_resp(e_MAIN_PIR);
-			sem_post(sem_write_socket);
 
-			usleep(100000);
+			if(u8_test_configured == e_TIMING_CLOSE || u8_test_configured == e_TIMING_CLOSE)
+			{
+				sem_wait(sem_write_socket);
+				channel_data_rec_resp(e_MAIN_PIR);
+				sem_post(sem_write_socket);
 
-			sem_wait(sem_write_socket);
-			channel_data_rec_resp(e_AUX);
-			sem_post(sem_write_socket);
+				usleep(500000);
+
+				sem_wait(sem_write_socket);
+				channel_data_rec_resp(e_AUX);
+				sem_post(sem_write_socket);
+			}
+
+			if(u8_test_configured == e_DCRM_CO)
+			{
+				sem_wait(sem_write_socket);
+				channel_data_rec_resp(e_SDCRM_1_C_1);
+				sem_post(sem_write_socket);
+
+				usleep(500000);
+
+				sem_wait(sem_write_socket);
+				channel_data_rec_resp(e_SDCRM_1_V_1);
+				sem_post(sem_write_socket);
+
+				usleep(500000);
+
+				sem_wait(sem_write_socket);
+				channel_data_rec_resp(e_SDCRM_1_C_2);
+				sem_post(sem_write_socket);
+
+				usleep(500000);
+
+				sem_wait(sem_write_socket);
+				channel_data_rec_resp(e_SDCRM_1_V_2);
+				sem_post(sem_write_socket);
+
+				sem_wait(sem_write_socket);
+				channel_data_rec_resp(e_SDCRM_2_C_1);
+				sem_post(sem_write_socket);
+
+				usleep(500000);
+
+				sem_wait(sem_write_socket);
+				channel_data_rec_resp(e_SDCRM_2_V_1);
+				sem_post(sem_write_socket);
+
+				usleep(500000);
+
+				sem_wait(sem_write_socket);
+				channel_data_rec_resp(e_SDCRM_2_C_2);
+				sem_post(sem_write_socket);
+
+				usleep(500000);
+
+				sem_wait(sem_write_socket);
+				channel_data_rec_resp(e_SDCRM_2_V_2);
+				sem_post(sem_write_socket);
+
+				sem_wait(sem_write_socket);
+				channel_data_rec_resp(e_SDCRM_3_C_1);
+				sem_post(sem_write_socket);
+
+				usleep(500000);
+
+				sem_wait(sem_write_socket);
+				channel_data_rec_resp(e_SDCRM_3_V_1);
+				sem_post(sem_write_socket);
+
+				usleep(500000);
+
+				sem_wait(sem_write_socket);
+				channel_data_rec_resp(e_SDCRM_3_C_2);
+				sem_post(sem_write_socket);
+
+				usleep(500000);
+
+				sem_wait(sem_write_socket);
+				channel_data_rec_resp(e_SDCRM_3_V_2);
+				sem_post(sem_write_socket);
+
+			}
 
 			usleep(500000);
 
@@ -4194,30 +4304,30 @@ void create_data_files()
 										"/coil_current_4",
 										"/coil_current_5",
 										"/coil_current_6",
-										"/sdcrm_1_v_1",
-										"/sdcrm_2_v_1",
-										"/sdcrm_3_v_1",
-										"/sdcrm_4_v_1",
-										"/sdcrm_5_v_1",
-										"/sdcrm_6_v_1",
-										"/sdcrm_1_v_2",
-										"/sdcrm_2_v_2",
-										"/sdcrm_3_v_2",
-										"/sdcrm_4_v_2",
-										"/sdcrm_5_v_2",
-										"/sdcrm_6_v_2",
-										"/sdcrm_1_c_1",
-										"/sdcrm_2_c_1",
-										"/sdcrm_3_c_1",
-										"/sdcrm_4_c_1",
-										"/sdcrm_5_c_1",
-										"/sdcrm_6_c_1",
-										"/sdcrm_1_c_2",
-										"/sdcrm_2_c_2",
-										"/sdcrm_3_c_2",
-										"/sdcrm_4_c_2",
-										"/sdcrm_5_c_2",
-										"/sdcrm_6_c_2",
+										"/sdcrm_c1",
+										"/sdcrm_v1",
+										"/sdcrm_c2",
+										"/sdcrm_v2",
+										"/sdcrm_c3",
+										"/sdcrm_v3",
+										"/sdcrm_c4",
+										"/sdcrm_v4",
+										"/sdcrm_c5",
+										"/sdcrm_v5",
+										"/sdcrm_c6",
+										"/sdcrm_v6",
+										"/sdcrm_c7",
+										"/sdcrm_v7",
+										"/sdcrm_c8",
+										"/sdcrm_v8",
+										"/sdcrm_c9",
+										"/sdcrm_v9",
+										"/sdcrm_c10",
+										"/sdcrm_v10",
+										"/sdcrm_c11",
+										"/sdcrm_v11",
+										"/sdcrm_c12",
+										"/sdcrm_v12",
 										"/travel_1",
 										"/travel_2",
 										"/travel_3",
@@ -4274,6 +4384,31 @@ void create_data_files()
 
 	printf("data files creation complete\r\n");
 
+}
+
+/*	Below code is to initialize the complete 50 shared object files to NULL data
+ * 	: HT
+ */
+
+void shared_objects_reinit()
+{
+	uint16_t u16_count = 0 ;
+	int32_t  *p_so = NULL;
+	uint32_t u32_mem = 100000,u32_count = 0;
+
+	/*	here the Pointer of each shared object is used to initialize the
+	 * 	the complete shared object to "NULL" : HT
+	 */
+
+	for(u16_count = 0 ; u16_count < 50 ; u16_count++)
+	{
+		p_so = (int32_t *)u_data_ptr.p_data_shm[u16_count];
+
+		for(u32_count = 0 ; u32_count < u32_mem ; u32_count++)
+		{
+			*((int32_t *)(p_so + u32_count)) = 0x00000000;
+		}
+	}
 }
 
 
@@ -4424,115 +4559,114 @@ void channel_data_rec_resp(uint8_t u8_data_file)
 		socket_resp(u16_activity,ACKNOWLEDGE);
 		break;
 
+	case e_SDCRM_1_C_1:
+		u16_activity = 0x44;
+		socket_resp(u16_activity,ACKNOWLEDGE);
+		break;
 
 	case e_SDCRM_1_V_1:
-		u16_activity = 0x32;
+		u16_activity = 0x45;
 		socket_resp(u16_activity,ACKNOWLEDGE);
 		break;
 
-	case e_SDCRM_2_V_1:
-		u16_activity = 0x33;
+	case e_SDCRM_1_C_2:
+		u16_activity = 0x46;
 		socket_resp(u16_activity,ACKNOWLEDGE);
 		break;
 
-	case e_SDCRM_3_V_1:
-		u16_activity = 0x34;
-		socket_resp(u16_activity,ACKNOWLEDGE);
-		break;
-
-	case e_SDCRM_4_V_1:
-		u16_activity = 0x35;
-		socket_resp(u16_activity,ACKNOWLEDGE);
-		break;
-
-	case e_SDCRM_5_V_1:
-		u16_activity = 0x36;
-		socket_resp(u16_activity,ACKNOWLEDGE);
-		break;
-
-	case e_SDCRM_6_V_1:
-		u16_activity = 0x37;
-		socket_resp(u16_activity,ACKNOWLEDGE);
-		break;
-
-	case e_SDCRM_1_C_1:
-		u16_activity = 0x38;
+	case e_SDCRM_1_V_2:
+		u16_activity = 0x47;
 		socket_resp(u16_activity,ACKNOWLEDGE);
 		break;
 
 	case e_SDCRM_2_C_1:
-		u16_activity = 0x39;
+		u16_activity = 0x48;
+		socket_resp(u16_activity,ACKNOWLEDGE);
+		break;
+
+	case e_SDCRM_2_V_1:
+		u16_activity = 0x49;
+		socket_resp(u16_activity,ACKNOWLEDGE);
+		break;
+
+	case e_SDCRM_2_C_2:
+		u16_activity = 0x4A;
+		socket_resp(u16_activity,ACKNOWLEDGE);
+		break;
+
+	case e_SDCRM_2_V_2:
+		u16_activity = 0x4B;
 		socket_resp(u16_activity,ACKNOWLEDGE);
 		break;
 
 	case e_SDCRM_3_C_1:
-		u16_activity = 0x3A;
+		u16_activity = 0x4C;
 		socket_resp(u16_activity,ACKNOWLEDGE);
 		break;
 
-	case e_SDCRM_4_C_1:
-		u16_activity = 0x3B;
+	case e_SDCRM_3_V_1:
+		u16_activity = 0x4D;
 		socket_resp(u16_activity,ACKNOWLEDGE);
 		break;
 
-	case e_SDCRM_5_C_1:
-		u16_activity = 0x3C;
-		socket_resp(u16_activity,ACKNOWLEDGE);
-		break;
-
-	case e_SDCRM_6_C_1:
-		u16_activity = 0x3D;
-		socket_resp(u16_activity,ACKNOWLEDGE);
-		break;
-
-	case e_SDCRM_1_V_2 :
-		u16_activity = 0x83;
-		socket_resp(u16_activity,ACKNOWLEDGE);
-		break;
-	case	e_SDCRM_2_V_2:
-		u16_activity = 0x84;
-		socket_resp(u16_activity,ACKNOWLEDGE);
-		break;
-	case	e_SDCRM_3_V_2:
-		u16_activity = 0x85;
-		socket_resp(u16_activity,ACKNOWLEDGE);
-		break;
-	case	e_SDCRM_4_V_2:
-		u16_activity = 0x86;
-		socket_resp(u16_activity,ACKNOWLEDGE);
-		break;
-	case	e_SDCRM_5_V_2:
-		u16_activity = 0x87;
-		socket_resp(u16_activity,ACKNOWLEDGE);
-		break;
-	case	e_SDCRM_6_V_2:
-		u16_activity = 0x88;
-		socket_resp(u16_activity,ACKNOWLEDGE);
-		break;
-
-
-	case e_SDCRM_1_C_2:
-		u16_activity = 0x89;
-		socket_resp(u16_activity,ACKNOWLEDGE);
-		break;
-	case e_SDCRM_2_C_2:
-		u16_activity = 0x8A;
-		socket_resp(u16_activity,ACKNOWLEDGE);
-		break;
 	case e_SDCRM_3_C_2:
-		u16_activity = 0x8B;
+		u16_activity = 0x4E;
+		socket_resp(u16_activity,ACKNOWLEDGE);
+		break;
+
+	case e_SDCRM_3_V_2:
+		u16_activity = 0x4F;
+		socket_resp(u16_activity,ACKNOWLEDGE);
+		break;
+
+	case e_SDCRM_4_C_1 :
+		u16_activity = 0x50;
+		socket_resp(u16_activity,ACKNOWLEDGE);
+		break;
+	case e_SDCRM_4_V_1:
+		u16_activity = 0x51;
 		socket_resp(u16_activity,ACKNOWLEDGE);
 		break;
 	case e_SDCRM_4_C_2:
-		u16_activity = 0x8C;
+		u16_activity = 0x52;
 		socket_resp(u16_activity,ACKNOWLEDGE);
 		break;
+	case e_SDCRM_4_V_2:
+		u16_activity = 0x53;
+		socket_resp(u16_activity,ACKNOWLEDGE);
+		break;
+	case	e_SDCRM_5_C_1:
+		u16_activity = 0x54;
+		socket_resp(u16_activity,ACKNOWLEDGE);
+		break;
+	case	e_SDCRM_5_V_1:
+		u16_activity = 0x55;
+		socket_resp(u16_activity,ACKNOWLEDGE);
+		break;
+
+
 	case e_SDCRM_5_C_2:
-		u16_activity = 0x8D;
+		u16_activity = 0x56;
+		socket_resp(u16_activity,ACKNOWLEDGE);
+		break;
+	case e_SDCRM_5_V_2:
+		u16_activity = 0x57;
+		socket_resp(u16_activity,ACKNOWLEDGE);
+		break;
+	case e_SDCRM_6_C_1:
+		u16_activity = 0x58;
+		socket_resp(u16_activity,ACKNOWLEDGE);
+		break;
+	case e_SDCRM_6_V_1:
+		u16_activity = 0x59;
 		socket_resp(u16_activity,ACKNOWLEDGE);
 		break;
 	case e_SDCRM_6_C_2:
-		u16_activity = 0x8E;
+		u16_activity = 0x5A;
+		socket_resp(u16_activity,ACKNOWLEDGE);
+		break;
+	case e_SDCRM_6_V_2:
+		u16_activity = 0x5B;
 		socket_resp(u16_activity,ACKNOWLEDGE);
 		break;
 
@@ -5102,6 +5236,8 @@ void dummy_hardware_config()
 	fclose(config_HW);
 	system("sync");
 }
+
+
 
 
 /*	Below code is for calculating the iterations according to

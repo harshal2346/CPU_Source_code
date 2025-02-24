@@ -52,6 +52,7 @@ void spi_test();
 void uart_test();
 void create_dummy_file();
 void create_demoClose_shared_objects();
+void create_demo_shared_objects();
 
 int main()
 {
@@ -109,16 +110,18 @@ int main()
 //	while(1)
 //	{
 //		//
-//		////			gpio_Led_en(1);
-//		////			usleep(500000);
-//		////			gpio_Led_en(0);
-//		////			usleep(500000);
+//					gpio_Led_en(1);
+//					usleep(500000);
+//					gpio_Led_en(0);
+//					usleep(500000);
 //		//			gpio_spi_test(1);
 //		//			usleep(1);
 //		//			gpio_spi_test(0);
 //		//			usleep(1);
-////					uart_test();
+//					uart_test();
 //					spi_test();
+//		gpio_spare_en(2,1);
+//				gpio_common(2,1);
 //				}
 
 
@@ -257,7 +260,8 @@ int main()
 
 	printf("Semaphores created\r\n");
 
-	create_demoClose_shared_objects();
+	create_demo_shared_objects();
+//	create_demoClose_shared_objects();
 
 //	while(1);
 
@@ -385,7 +389,7 @@ void uart_test()
 
 
 
-	uart_fd = open("/dev/ttyUL3",O_RDWR | O_NONBLOCK);
+	uart_fd = open("/dev/ttyUL1",O_RDWR | O_NONBLOCK);
 	if(uart_fd < 0)
 	{
 		perror("Error : file open Error\r\n");
@@ -495,6 +499,22 @@ void *travel_4;
 void *travel_5;
 void *travel_6;
 
+void *dcrm1_v1;
+void *dcrm2_v1;
+void *dcrm3_v1;
+void *dcrm4_v1;
+void *dcrm5_v1;
+void *dcrm6_v1;
+
+
+void *dcrm1_c1;
+void *dcrm2_c1;
+void *dcrm3_c1;
+void *dcrm4_c1;
+void *dcrm5_c1;
+void *dcrm6_c1;
+
+
 void create_demo_shared_objects()
 {
 	int size = 400000;
@@ -518,6 +538,22 @@ void create_demo_shared_objects()
 	char *p_travel_4 = "/travel_4";
 	char *p_travel_5 = "/travel_5";
 	char *p_travel_6 = "/travel_6";
+
+	/*	shared name objects for 12 channels of DCRM data */
+	char *p_dcrm1_v1 = "/sdcrm_v1";
+	char *p_dcrm2_v1 = "/sdcrm_v2";
+	char *p_dcrm3_v1 = "/sdcrm_v3";
+	char *p_dcrm4_v1 = "/sdcrm_v4";
+	char *p_dcrm5_v1 = "/sdcrm_v5";
+	char *p_dcrm6_v1 = "/sdcrm_v6";
+
+
+	char *p_dcrm1_c1 = "/sdcrm_c1";
+	char *p_dcrm2_c1 = "/sdcrm_c2";
+	char *p_dcrm3_c1 = "/sdcrm_c3";
+	char *p_dcrm4_c1 = "/sdcrm_c4";
+	char *p_dcrm5_c1 = "/sdcrm_c5";
+	char *p_dcrm6_c1 = "/sdcrm_c6";
 
 //	/* 	file opened for the Main and PIR contact values reading */
 //	fp = fopen("/home/root/Demo_data/Close/Main_PIR.csv","r");
@@ -562,6 +598,8 @@ void create_demo_shared_objects()
         while(1);
     }
 
+    printf("Auxilary contact objects created\r\n");
+
 	/*------------------------ file 1 creation code ------------------------------*/
 
     int fd_1 = shm_open(p_main_pir, O_CREAT | O_RDWR, 0666);
@@ -579,6 +617,8 @@ void create_demo_shared_objects()
         //return -1;
         while(1);
     }
+
+    printf("Main PIR objects created\r\n");
 
 
     /*------------------------ shared object Coil_Current_1 creation code ------------------------------*/
@@ -689,6 +729,8 @@ void create_demo_shared_objects()
         while(1);
     }
 
+    printf("Coil Current objects created\r\n");
+
     /*------------------------ shared Object Travel_1 creation code ------------------------------------*/
     int fd_travel_1 = shm_open(p_travel_1, O_CREAT | O_RDWR, 0666);
     if(fd_travel_1 == -1)
@@ -791,7 +833,244 @@ void create_demo_shared_objects()
     	while(1);
     }
 
-    printf("shared objects created separately\r\n");
+    printf("Travel objects created\r\n");
+
+    /*--------------------- DCRM 1 - 6 Voltage and Current files creation ---------*/
+    /*--------------------- DCRM 1 - voltage 1 ------------------------------------*/
+
+    int fd_dcrm1_v1 = shm_open(p_dcrm1_v1, O_CREAT | O_RDWR, 0666);
+    if(fd_dcrm1_v1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    ftruncate(fd_dcrm1_v1,size);
+
+    dcrm1_v1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm1_v1, 0);
+    if(dcrm1_v1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+
+    /*--------------------- DCRM 2 - voltage 1 ------------------------------------*/
+
+    int fd_dcrm2_v1 = shm_open(p_dcrm2_v1, O_CREAT | O_RDWR, 0666);
+    if(fd_dcrm2_v1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    ftruncate(fd_dcrm2_v1,size);
+
+    dcrm2_v1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm2_v1, 0);
+    if(dcrm2_v1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    /*--------------------- DCRM 3 - voltage 1 ------------------------------------*/
+
+    int fd_dcrm3_v1 = shm_open(p_dcrm3_v1, O_CREAT | O_RDWR, 0666);
+    if(fd_dcrm3_v1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    ftruncate(fd_dcrm3_v1,size);
+
+    dcrm3_v1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm3_v1, 0);
+    if(dcrm3_v1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    /*--------------------- DCRM 4 - voltage 1 ------------------------------------*/
+
+    int fd_dcrm4_v1 = shm_open(p_dcrm4_v1, O_CREAT | O_RDWR, 0666);
+    if(fd_dcrm4_v1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    ftruncate(fd_dcrm4_v1,size);
+
+    dcrm4_v1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm4_v1, 0);
+    if(dcrm4_v1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+
+    /*--------------------- DCRM 5 - voltage 1 ------------------------------------*/
+
+    int fd_dcrm5_v1 = shm_open(p_dcrm5_v1, O_CREAT | O_RDWR, 0666);
+    if(fd_dcrm5_v1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    ftruncate(fd_dcrm5_v1,size);
+
+    dcrm5_v1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm5_v1, 0);
+    if(dcrm5_v1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    /*--------------------- DCRM 6 - voltage 1 ------------------------------------*/
+
+    int fd_dcrm6_v1 = shm_open(p_dcrm6_v1, O_CREAT | O_RDWR, 0666);
+    if(fd_dcrm6_v1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    ftruncate(fd_dcrm6_v1,size);
+
+    dcrm6_v1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm6_v1, 0);
+    if(dcrm6_v1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    /*--------------------- DCRM 1 - current 1 ------------------------------------*/
+
+    int fd_dcrm1_c1 = shm_open(p_dcrm1_c1, O_CREAT | O_RDWR, 0666);
+    if(fd_dcrm1_c1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    ftruncate(fd_dcrm1_c1,size);
+
+    dcrm1_c1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm1_c1, 0);
+    if(dcrm1_c1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    /*--------------------- DCRM 2 - current 1 ------------------------------------*/
+
+    int fd_dcrm2_c1 = shm_open(p_dcrm2_c1, O_CREAT | O_RDWR, 0666);
+    if(fd_dcrm2_c1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    ftruncate(fd_dcrm2_c1,size);
+
+    dcrm2_c1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm2_c1, 0);
+    if(dcrm2_c1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    /*--------------------- DCRM 3 - current 1 ------------------------------------*/
+
+    int fd_dcrm3_c1 = shm_open(p_dcrm3_c1, O_CREAT | O_RDWR, 0666);
+    if(fd_dcrm3_c1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    ftruncate(fd_dcrm3_c1,size);
+
+    dcrm3_c1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm3_c1, 0);
+    if(dcrm3_c1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    /*--------------------- DCRM 4 - current 1 ------------------------------------*/
+
+    int fd_dcrm4_c1 = shm_open(p_dcrm4_c1, O_CREAT | O_RDWR, 0666);
+    if(fd_dcrm4_c1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    ftruncate(fd_dcrm4_c1,size);
+
+    dcrm4_c1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm4_c1, 0);
+    if(dcrm4_c1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    /*--------------------- DCRM 5 - current 1 ------------------------------------*/
+
+    int fd_dcrm5_c1 = shm_open(p_dcrm5_c1, O_CREAT | O_RDWR, 0666);
+    if(fd_dcrm5_c1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    ftruncate(fd_dcrm5_c1,size);
+
+    dcrm5_c1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm5_c1, 0);
+    if(dcrm5_c1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    /*--------------------- DCRM 6 - current 1 ------------------------------------*/
+
+    int fd_dcrm6_c1 = shm_open(p_dcrm6_c1, O_CREAT | O_RDWR, 0666);
+    if(fd_dcrm6_c1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    ftruncate(fd_dcrm6_c1,size);
+
+    dcrm6_c1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm6_c1, 0);
+    if(dcrm6_c1 == -1)
+    {
+    	perror("Error in creating shared memory file for travel_5\r\n");
+    	while(1);
+    }
+
+    printf("DCRM objects created\r\n");
+
+    printf("memory address %p\r\n",(char*)mem_1);
+    printf("Auxilary address %p\r\n",(char*)aux);
+    printf("coil_1 address %p\r\n",(char*)coil_1);
+    printf("coil_2 address %p\r\n",(char*)coil_2);
+    printf("coil_3 address %p\r\n",(char*)coil_3);
+    printf("coil_4 address %p\r\n",(char*)coil_4);
+    printf("coil_5 address %p\r\n",(char*)coil_5);
+    printf("coil_6 address %p\r\n",(char*)coil_6);
+
+    printf("travel_1 address %p\r\n",(char*)travel_1);
+    printf("travel_2 address %p\r\n",(char*)travel_2);
+    printf("travel_3 address %p\r\n",(char*)travel_3);
+
+
+//    printf("shared objects created separately\r\n");
 
 }
 
@@ -799,7 +1078,9 @@ void create_demo_shared_objects()
 
 void create_demoClose_shared_objects()
 {
-	FILE *fp,*fp_coil,*fp_aux,*fp_travel;
+
+
+	FILE *fp,*fp_coil,*fp_aux,*fp_travel,*fp_dcrm;
 	char raw_data[5000];
 	char *token;
 
@@ -810,28 +1091,55 @@ void create_demoClose_shared_objects()
 
 	int32_t i32_travel[6] = {0};
 
-	int size = 400000;
+	int32_t i32_dcrm[12] = {0};
+
+//	int size = 400000;
 
 	/*	File names required for creating shared objects into /dev/shm :HT */
-	char *p_main_pir = "/main_pir_contact";
+//	char *p_main_pir = "/main_pir_contact";
 
-	char *p_aux = "/auxilary_contact";
+//	char *p_aux = "/auxilary_contact";
 
 	/* 	shared name object for Coil current data */
-	char *p_coil_1 = "/coil_current_1";
-	char *p_coil_2 = "/coil_current_2";
-	char *p_coil_3 = "/coil_current_3";
-	char *p_coil_4 = "/coil_current_4";
-	char *p_coil_5 = "/coil_current_5";
-	char *p_coil_6 = "/coil_current_6";
+//	char *p_coil_1 = "/coil_current_1";
+//	char *p_coil_2 = "/coil_current_2";
+//	char *p_coil_3 = "/coil_current_3";
+//	char *p_coil_4 = "/coil_current_4";
+//	char *p_coil_5 = "/coil_current_5";
+//	char *p_coil_6 = "/coil_current_6";
 
 	/*	shared name object for 6 channels of Travel data */
-	char *p_travel_1 = "/travel_1";
-	char *p_travel_2 = "/travel_2";
-	char *p_travel_3 = "/travel_3";
-	char *p_travel_4 = "/travel_4";
-	char *p_travel_5 = "/travel_5";
-	char *p_travel_6 = "/travel_6";
+//	char *p_travel_1 = "/travel_1";
+//	char *p_travel_2 = "/travel_2";
+//	char *p_travel_3 = "/travel_3";
+//	char *p_travel_4 = "/travel_4";
+//	char *p_travel_5 = "/travel_5";
+//	char *p_travel_6 = "/travel_6";
+
+//	char *p_dcrm1_v1 = "/sdcrm_1_v_1";
+//	char *p_dcrm2_v1 = "/sdcrm_2_v_1";
+//	char *p_dcrm3_v1 = "/sdcrm_3_v_1";
+//	char *p_dcrm4_v1 = "/sdcrm_4_v_1";
+//	char *p_dcrm5_v1 = "/sdcrm_5_v_1";
+//	char *p_dcrm6_v1 = "/sdcrm_6_v_1";
+
+//		char *p_dcrm1_v1 = "/sdcrm_v1";
+//		char *p_dcrm2_v1 = "/sdcrm_v2";
+//		char *p_dcrm3_v1 = "/sdcrm_v3";
+//		char *p_dcrm4_v1 = "/sdcrm_v4";
+//		char *p_dcrm5_v1 = "/sdcrm_v5";
+//		char *p_dcrm6_v1 = "/sdcrm_v6";
+//
+//
+//	char *p_dcrm1_c1 = "/sdcrm_c1";
+//	char *p_dcrm2_c1 = "/sdcrm_c2";
+//	char *p_dcrm3_c1 = "/sdcrm_c3";
+//	char *p_dcrm4_c1 = "/sdcrm_c4";
+//	char *p_dcrm5_c1 = "/sdcrm_c5";
+//	char *p_dcrm6_c1 = "/sdcrm_c6";
+
+
+
 
 	/* 	file opened for the Main and PIR contact values reading */
 
@@ -862,265 +1170,480 @@ void create_demoClose_shared_objects()
 		printf("Error in opening Travel data file\r\n");
 	}
 
-	/*------------------------ Shared object creation for Auxilary contact data -----------*/
-	int fd_aux = shm_open(p_aux, O_CREAT | O_RDWR, 0666);
-	if(fd_aux == -1)
-	{
-		perror("Error creating Auxilary contact memory file\r\n");
-		while(1);
-	}
+//	fp_dcrm = fopen("/home/root/Demo_data/DCRM/DCRM.csv","r");
+//	if(fp_dcrm == NULL)
+//	{
+//		printf("Error in opening DCRM data file\r\n");
+//	}
 
-	ftruncate(fd_aux, size);
+//	/*------------------------ Shared object creation for Auxilary contact data -----------*/
+//	int fd_aux = shm_open(p_aux, O_CREAT | O_RDWR, 0666);
+//	if(fd_aux == -1)
+//	{
+//		perror("Error creating Auxilary contact memory file\r\n");
+//		while(1);
+//	}
+//
+//	ftruncate(fd_aux, size);
+//
+//    aux = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_aux, 0);
+//    if (aux == MAP_FAILED) {
+//        perror("Error mapping Auxilary shared memory file into memory");
+//        //return -1;
+//        while(1);
+//    }
+//
+//	/*------------------------ file 1 creation code ------------------------------*/
+//
+//    int fd_1 = shm_open(p_main_pir, O_CREAT | O_RDWR, 0666);
+//    if (fd_1 == -1) {
+//        perror("Error creating shared memory file");
+//        //return -1;
+//        while(1);
+//    }
+//
+//    ftruncate(fd_1, size);
+//
+//    mem_1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_1, 0);
+//    if (mem_1 == MAP_FAILED) {
+//        perror("Error mapping shared memory file into memory");
+//        //return -1;
+//        while(1);
+//    }
+//
+//
+//    /*------------------------ shared object Coil_Current_1 creation code ------------------------------*/
+//
+//    int fd_coil_1 = shm_open(p_coil_1, O_CREAT | O_RDWR, 0666);
+//    if (fd_coil_1 == -1) {
+//        perror("Error creating shared memory file");
+//        //return -1;
+//        while(1);
+//    }
+//
+//    ftruncate(fd_coil_1, size);
+//
+//    coil_1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_coil_1, 0);
+//    if (coil_1 == MAP_FAILED) {
+//        perror("Error mapping shared memory file into memory");
+//        //return -1;
+//        while(1);
+//    }
+//
+//    /*------------------------ shared object Coil_Current_2 creation code ------------------------------*/
+//
+//    int fd_coil_2 = shm_open(p_coil_2, O_CREAT | O_RDWR, 0666);
+//    if (fd_coil_2 == -1) {
+//        perror("Error creating shared memory file");
+//        //return -1;
+//        while(1);
+//    }
+//
+//    ftruncate(fd_coil_2, size);
+//
+//    coil_2 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_coil_2, 0);
+//    if (coil_2 == MAP_FAILED) {
+//        perror("Error mapping shared memory file into memory");
+//        //return -1;
+//        while(1);
+//    }
+//
+//    /*------------------------ shared object Coil_Current_3 creation code ------------------------------*/
+//
+//    int fd_coil_3 = shm_open(p_coil_3, O_CREAT | O_RDWR, 0666);
+//    if (fd_coil_3 == -1) {
+//        perror("Error creating shared memory file");
+//        //return -1;
+//        while(1);
+//    }
+//
+//    ftruncate(fd_coil_3, size);
+//
+//    coil_3 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_coil_3, 0);
+//    if (coil_3 == MAP_FAILED) {
+//        perror("Error mapping shared memory file into memory");
+//        //return -1;
+//        while(1);
+//    }
+//
+//    /*------------------------ shared object Coil_Current_4 creation code ------------------------------*/
+//
+//    int fd_coil_4 = shm_open(p_coil_4, O_CREAT | O_RDWR, 0666);
+//    if (fd_coil_4 == -1) {
+//        perror("Error creating shared memory file");
+//        //return -1;
+//        while(1);
+//    }
+//
+//    ftruncate(fd_coil_4, size);
+//
+//    coil_4 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_coil_4, 0);
+//    if (coil_4 == MAP_FAILED) {
+//        perror("Error mapping shared memory file into memory");
+//        //return -1;
+//        while(1);
+//    }
+//
+//    /*------------------------ shared object Coil_Current_5 creation code ------------------------------*/
+//
+//    int fd_coil_5 = shm_open(p_coil_5, O_CREAT | O_RDWR, 0666);
+//    if (fd_coil_5 == -1) {
+//        perror("Error creating shared memory file");
+//        //return -1;
+//        while(1);
+//    }
+//
+//    ftruncate(fd_coil_5, size);
+//
+//    coil_5 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_coil_5, 0);
+//    if (coil_5 == MAP_FAILED) {
+//        perror("Error mapping shared memory file into memory");
+//        //return -1;
+//        while(1);
+//    }
+//
+//    /*------------------------ shared object Coil_Current_6 creation code ------------------------------*/
+//
+//    int fd_coil_6 = shm_open(p_coil_6, O_CREAT | O_RDWR, 0666);
+//    if (fd_coil_6 == -1) {
+//        perror("Error creating shared memory file");
+//        //return -1;
+//        while(1);
+//    }
+//
+//    ftruncate(fd_coil_6, size);
+//
+//    coil_6 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_coil_6, 0);
+//    if (coil_6 == MAP_FAILED) {
+//        perror("Error mapping shared memory file into memory");
+//        //return -1;
+//        while(1);
+//    }
+//
+//    /*------------------------ shared Object Travel_1 creation code ------------------------------------*/
+//    int fd_travel_1 = shm_open(p_travel_1, O_CREAT | O_RDWR, 0666);
+//    if(fd_travel_1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_1\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_travel_1,size);
+//
+//    travel_1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_travel_1, 0);
+//    if(travel_1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_1\r\n");
+//    	while(1);
+//    }
+//
+//    /*------------------------ shared Object Travel_2 creation code ------------------------------------*/
+//    int fd_travel_2 = shm_open(p_travel_2, O_CREAT | O_RDWR, 0666);
+//    if(fd_travel_2 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_2\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_travel_2,size);
+//
+//    travel_2 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_travel_2, 0);
+//    if(travel_2 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_2\r\n");
+//    	while(1);
+//    }
+//
+//    /*------------------------ shared Object Travel_3 creation code ------------------------------------*/
+//    int fd_travel_3 = shm_open(p_travel_3, O_CREAT | O_RDWR, 0666);
+//    if(fd_travel_3 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_3\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_travel_3,size);
+//
+//    travel_3 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_travel_3, 0);
+//    if(travel_3 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_3\r\n");
+//    	while(1);
+//    }
+//
+//    /*------------------------ shared Object Travel_4 creation code ------------------------------------*/
+//    int fd_travel_4 = shm_open(p_travel_4, O_CREAT | O_RDWR, 0666);
+//    if(fd_travel_4 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_4\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_travel_4,size);
+//
+//    travel_4 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_travel_4, 0);
+//    if(travel_4 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_4\r\n");
+//    	while(1);
+//    }
+//
+//    /*------------------------ shared Object Travel_5 creation code ------------------------------------*/
+//    int fd_travel_5 = shm_open(p_travel_5, O_CREAT | O_RDWR, 0666);
+//    if(fd_travel_5 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_travel_5,size);
+//
+//    travel_5 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_travel_5, 0);
+//    if(travel_5 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    /*------------------------ shared Object Travel_5 creation code ------------------------------------*/
+//    int fd_travel_6 = shm_open(p_travel_6, O_CREAT | O_RDWR, 0666);
+//    if(fd_travel_6 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_6\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_travel_6,size);
+//
+//    travel_6 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_travel_6, 0);
+//    if(travel_6 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_6\r\n");
+//    	while(1);
+//    }
+//
+//    /*--------------------- DCRM 1 - 6 Voltage and Current files creation ---------*/
+//    /*--------------------- DCRM 1 - voltage 1 ------------------------------------*/
+//
+//    int fd_dcrm1_v1 = shm_open(p_dcrm1_v1, O_CREAT | O_RDWR, 0666);
+//    if(fd_dcrm1_v1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_dcrm1_v1,size);
+//
+//    dcrm1_v1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm1_v1, 0);
+//    if(dcrm1_v1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//
+//    /*--------------------- DCRM 2 - voltage 1 ------------------------------------*/
+//
+//    int fd_dcrm2_v1 = shm_open(p_dcrm2_v1, O_CREAT | O_RDWR, 0666);
+//    if(fd_dcrm2_v1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_dcrm2_v1,size);
+//
+//    dcrm2_v1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm2_v1, 0);
+//    if(dcrm2_v1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    /*--------------------- DCRM 3 - voltage 1 ------------------------------------*/
+//
+//    int fd_dcrm3_v1 = shm_open(p_dcrm3_v1, O_CREAT | O_RDWR, 0666);
+//    if(fd_dcrm3_v1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_dcrm3_v1,size);
+//
+//    dcrm3_v1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm3_v1, 0);
+//    if(dcrm3_v1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    /*--------------------- DCRM 4 - voltage 1 ------------------------------------*/
+//
+//    int fd_dcrm4_v1 = shm_open(p_dcrm4_v1, O_CREAT | O_RDWR, 0666);
+//    if(fd_dcrm4_v1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_dcrm4_v1,size);
+//
+//    dcrm4_v1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm4_v1, 0);
+//    if(dcrm4_v1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//
+//    /*--------------------- DCRM 5 - voltage 1 ------------------------------------*/
+//
+//    int fd_dcrm5_v1 = shm_open(p_dcrm5_v1, O_CREAT | O_RDWR, 0666);
+//    if(fd_dcrm5_v1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_dcrm5_v1,size);
+//
+//    dcrm5_v1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm5_v1, 0);
+//    if(dcrm5_v1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    /*--------------------- DCRM 6 - voltage 1 ------------------------------------*/
+//
+//    int fd_dcrm6_v1 = shm_open(p_dcrm6_v1, O_CREAT | O_RDWR, 0666);
+//    if(fd_dcrm6_v1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_dcrm6_v1,size);
+//
+//    dcrm6_v1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm6_v1, 0);
+//    if(dcrm6_v1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    /*--------------------- DCRM 1 - current 1 ------------------------------------*/
+//
+//    int fd_dcrm1_c1 = shm_open(p_dcrm1_c1, O_CREAT | O_RDWR, 0666);
+//    if(fd_dcrm1_c1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_dcrm1_c1,size);
+//
+//    dcrm1_c1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm1_c1, 0);
+//    if(dcrm1_c1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    /*--------------------- DCRM 2 - current 1 ------------------------------------*/
+//
+//    int fd_dcrm2_c1 = shm_open(p_dcrm2_c1, O_CREAT | O_RDWR, 0666);
+//    if(fd_dcrm2_c1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_dcrm2_c1,size);
+//
+//    dcrm2_c1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm2_c1, 0);
+//    if(dcrm2_c1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    /*--------------------- DCRM 3 - current 1 ------------------------------------*/
+//
+//    int fd_dcrm3_c1 = shm_open(p_dcrm3_c1, O_CREAT | O_RDWR, 0666);
+//    if(fd_dcrm3_c1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_dcrm3_c1,size);
+//
+//    dcrm3_c1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm3_c1, 0);
+//    if(dcrm3_c1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    /*--------------------- DCRM 4 - current 1 ------------------------------------*/
+//
+//    int fd_dcrm4_c1 = shm_open(p_dcrm4_c1, O_CREAT | O_RDWR, 0666);
+//    if(fd_dcrm4_c1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_dcrm4_c1,size);
+//
+//    dcrm4_c1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm4_c1, 0);
+//    if(dcrm4_c1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    /*--------------------- DCRM 5 - current 1 ------------------------------------*/
+//
+//    int fd_dcrm5_c1 = shm_open(p_dcrm5_c1, O_CREAT | O_RDWR, 0666);
+//    if(fd_dcrm5_c1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_dcrm5_c1,size);
+//
+//    dcrm5_c1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm5_c1, 0);
+//    if(dcrm5_c1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    /*--------------------- DCRM 6 - current 1 ------------------------------------*/
+//
+//    int fd_dcrm6_c1 = shm_open(p_dcrm6_c1, O_CREAT | O_RDWR, 0666);
+//    if(fd_dcrm6_c1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
+//
+//    ftruncate(fd_dcrm6_c1,size);
+//
+//    dcrm6_c1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_dcrm6_c1, 0);
+//    if(dcrm6_c1 == -1)
+//    {
+//    	perror("Error in creating shared memory file for travel_5\r\n");
+//    	while(1);
+//    }
 
-    aux = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_aux, 0);
-    if (aux == MAP_FAILED) {
-        perror("Error mapping Auxilary shared memory file into memory");
-        //return -1;
-        while(1);
-    }
-
-	/*------------------------ file 1 creation code ------------------------------*/
-
-    int fd_1 = shm_open(p_main_pir, O_CREAT | O_RDWR, 0666);
-    if (fd_1 == -1) {
-        perror("Error creating shared memory file");
-        //return -1;
-        while(1);
-    }
-
-    ftruncate(fd_1, size);
-
-    mem_1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_1, 0);
-    if (mem_1 == MAP_FAILED) {
-        perror("Error mapping shared memory file into memory");
-        //return -1;
-        while(1);
-    }
+//    printf("DCRM shared objects created\r\n");
 
 
-    /*------------------------ shared object Coil_Current_1 creation code ------------------------------*/
-
-    int fd_coil_1 = shm_open(p_coil_1, O_CREAT | O_RDWR, 0666);
-    if (fd_coil_1 == -1) {
-        perror("Error creating shared memory file");
-        //return -1;
-        while(1);
-    }
-
-    ftruncate(fd_coil_1, size);
-
-    coil_1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_coil_1, 0);
-    if (coil_1 == MAP_FAILED) {
-        perror("Error mapping shared memory file into memory");
-        //return -1;
-        while(1);
-    }
-
-    /*------------------------ shared object Coil_Current_2 creation code ------------------------------*/
-
-    int fd_coil_2 = shm_open(p_coil_2, O_CREAT | O_RDWR, 0666);
-    if (fd_coil_2 == -1) {
-        perror("Error creating shared memory file");
-        //return -1;
-        while(1);
-    }
-
-    ftruncate(fd_coil_2, size);
-
-    coil_2 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_coil_2, 0);
-    if (coil_2 == MAP_FAILED) {
-        perror("Error mapping shared memory file into memory");
-        //return -1;
-        while(1);
-    }
-
-    /*------------------------ shared object Coil_Current_3 creation code ------------------------------*/
-
-    int fd_coil_3 = shm_open(p_coil_3, O_CREAT | O_RDWR, 0666);
-    if (fd_coil_3 == -1) {
-        perror("Error creating shared memory file");
-        //return -1;
-        while(1);
-    }
-
-    ftruncate(fd_coil_3, size);
-
-    coil_3 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_coil_3, 0);
-    if (coil_3 == MAP_FAILED) {
-        perror("Error mapping shared memory file into memory");
-        //return -1;
-        while(1);
-    }
-
-    /*------------------------ shared object Coil_Current_4 creation code ------------------------------*/
-
-    int fd_coil_4 = shm_open(p_coil_4, O_CREAT | O_RDWR, 0666);
-    if (fd_coil_4 == -1) {
-        perror("Error creating shared memory file");
-        //return -1;
-        while(1);
-    }
-
-    ftruncate(fd_coil_4, size);
-
-    coil_4 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_coil_4, 0);
-    if (coil_4 == MAP_FAILED) {
-        perror("Error mapping shared memory file into memory");
-        //return -1;
-        while(1);
-    }
-
-    /*------------------------ shared object Coil_Current_5 creation code ------------------------------*/
-
-    int fd_coil_5 = shm_open(p_coil_5, O_CREAT | O_RDWR, 0666);
-    if (fd_coil_5 == -1) {
-        perror("Error creating shared memory file");
-        //return -1;
-        while(1);
-    }
-
-    ftruncate(fd_coil_5, size);
-
-    coil_5 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_coil_5, 0);
-    if (coil_5 == MAP_FAILED) {
-        perror("Error mapping shared memory file into memory");
-        //return -1;
-        while(1);
-    }
-
-    /*------------------------ shared object Coil_Current_6 creation code ------------------------------*/
-
-    int fd_coil_6 = shm_open(p_coil_6, O_CREAT | O_RDWR, 0666);
-    if (fd_coil_6 == -1) {
-        perror("Error creating shared memory file");
-        //return -1;
-        while(1);
-    }
-
-    ftruncate(fd_coil_6, size);
-
-    coil_6 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_coil_6, 0);
-    if (coil_6 == MAP_FAILED) {
-        perror("Error mapping shared memory file into memory");
-        //return -1;
-        while(1);
-    }
-
-    /*------------------------ shared Object Travel_1 creation code ------------------------------------*/
-    int fd_travel_1 = shm_open(p_travel_1, O_CREAT | O_RDWR, 0666);
-    if(fd_travel_1 == -1)
-    {
-    	perror("Error in creating shared memory file for travel_1\r\n");
-    	while(1);
-    }
-
-    ftruncate(fd_travel_1,size);
-
-    travel_1 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_travel_1, 0);
-    if(travel_1 == -1)
-    {
-    	perror("Error in creating shared memory file for travel_1\r\n");
-    	while(1);
-    }
-
-    /*------------------------ shared Object Travel_2 creation code ------------------------------------*/
-    int fd_travel_2 = shm_open(p_travel_2, O_CREAT | O_RDWR, 0666);
-    if(fd_travel_2 == -1)
-    {
-    	perror("Error in creating shared memory file for travel_2\r\n");
-    	while(1);
-    }
-
-    ftruncate(fd_travel_2,size);
-
-    travel_2 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_travel_2, 0);
-    if(travel_2 == -1)
-    {
-    	perror("Error in creating shared memory file for travel_2\r\n");
-    	while(1);
-    }
-
-    /*------------------------ shared Object Travel_3 creation code ------------------------------------*/
-    int fd_travel_3 = shm_open(p_travel_3, O_CREAT | O_RDWR, 0666);
-    if(fd_travel_3 == -1)
-    {
-    	perror("Error in creating shared memory file for travel_3\r\n");
-    	while(1);
-    }
-
-    ftruncate(fd_travel_3,size);
-
-    travel_3 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_travel_3, 0);
-    if(travel_3 == -1)
-    {
-    	perror("Error in creating shared memory file for travel_3\r\n");
-    	while(1);
-    }
-
-    /*------------------------ shared Object Travel_4 creation code ------------------------------------*/
-    int fd_travel_4 = shm_open(p_travel_4, O_CREAT | O_RDWR, 0666);
-    if(fd_travel_4 == -1)
-    {
-    	perror("Error in creating shared memory file for travel_4\r\n");
-    	while(1);
-    }
-
-    ftruncate(fd_travel_4,size);
-
-    travel_4 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_travel_4, 0);
-    if(travel_4 == -1)
-    {
-    	perror("Error in creating shared memory file for travel_4\r\n");
-    	while(1);
-    }
-
-    /*------------------------ shared Object Travel_5 creation code ------------------------------------*/
-    int fd_travel_5 = shm_open(p_travel_5, O_CREAT | O_RDWR, 0666);
-    if(fd_travel_5 == -1)
-    {
-    	perror("Error in creating shared memory file for travel_5\r\n");
-    	while(1);
-    }
-
-    ftruncate(fd_travel_5,size);
-
-    travel_5 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_travel_5, 0);
-    if(travel_5 == -1)
-    {
-    	perror("Error in creating shared memory file for travel_5\r\n");
-    	while(1);
-    }
-
-    /*------------------------ shared Object Travel_5 creation code ------------------------------------*/
-    int fd_travel_6 = shm_open(p_travel_6, O_CREAT | O_RDWR, 0666);
-    if(fd_travel_6 == -1)
-    {
-    	perror("Error in creating shared memory file for travel_6\r\n");
-    	while(1);
-    }
-
-    ftruncate(fd_travel_6,size);
-
-    travel_6 = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_travel_6, 0);
-    if(travel_6 == -1)
-    {
-    	perror("Error in creating shared memory file for travel_6\r\n");
-    	while(1);
-    }
-
-
-    printf("memory address %p\r\n",(char*)mem_1);
-    printf("Auxilary address %p\r\n",(char*)aux);
-    printf("coil_1 address %p\r\n",(char*)coil_1);
-    printf("coil_2 address %p\r\n",(char*)coil_2);
-    printf("coil_3 address %p\r\n",(char*)coil_3);
-    printf("coil_4 address %p\r\n",(char*)coil_4);
-    printf("coil_5 address %p\r\n",(char*)coil_5);
-    printf("coil_6 address %p\r\n",(char*)coil_6);
-
-    printf("travel_1 address %p\r\n",(char*)travel_1);
-    printf("travel_2 address %p\r\n",(char*)travel_2);
-    printf("travel_3 address %p\r\n",(char*)travel_3);
 //    printf("travel_4 address %p\r\n",(char*)travel_4);
 //    printf("travel_5 address %p\r\n",(char*)travel_5);
 //    printf("travel_6 address %p\r\n",(char*)travel_6);
@@ -1143,6 +1666,24 @@ void create_demoClose_shared_objects()
     int32_t* i_travel_4 = (int32_t*)travel_4;
     int32_t* i_travel_5 = (int32_t*)travel_5;
     int32_t* i_travel_6 = (int32_t*)travel_6;
+
+//    int32_t* i_dcrm1_v1 = (int32_t*)dcrm1_v1;
+//    int32_t* i_dcrm2_v1 = (int32_t*)dcrm2_v1;
+//    int32_t* i_dcrm3_v1 = (int32_t*)dcrm3_v1;
+//    int32_t* i_dcrm4_v1 = (int32_t*)dcrm4_v1;
+//    int32_t* i_dcrm5_v1 = (int32_t*)dcrm5_v1;
+//    int32_t* i_dcrm6_v1 = (int32_t*)dcrm6_v1;
+//
+//    int32_t* i_dcrm1_c1 = (int32_t*)dcrm1_c1;
+//    int32_t* i_dcrm2_c1 = (int32_t*)dcrm2_c1;
+//    int32_t* i_dcrm3_c1 = (int32_t*)dcrm3_c1;
+//    int32_t* i_dcrm4_c1 = (int32_t*)dcrm4_c1;
+//    int32_t* i_dcrm5_c1 = (int32_t*)dcrm5_c1;
+//    int32_t* i_dcrm6_c1 = (int32_t*)dcrm6_c1;
+
+
+
+
 
     //float *data_1 = (float *)mem_1;
     //strcpy((char*)mem,"hello world\r\n");
@@ -1217,10 +1758,10 @@ void create_demoClose_shared_objects()
 		}
 
 
-		if(u32_count < 100)
-		{
-			printf("%d\t %x\r\n",u32_count,u32_value);
-		}
+//		if(u32_count < 100)
+//		{
+//			printf("%d\t %x\r\n",u32_count,u32_value);
+//		}
 
 		u32_count++;
 		*(int32_t *)i_aux = u32_value;
@@ -1228,6 +1769,7 @@ void create_demoClose_shared_objects()
 		u32_value = 0;
 	}
 
+	printf("count %d\r\n",u32_count);
 
 
 	u32_count = 0;
@@ -1281,6 +1823,8 @@ void create_demoClose_shared_objects()
     	u32_count++;
     }
 
+    printf("count %d\r\n",u32_count);
+
 	u32_count = 0;
     while(fgets(raw_data,5000,fp_travel)!= NULL)
 //    while(u32_count < 10)
@@ -1298,27 +1842,29 @@ void create_demoClose_shared_objects()
     			i32_travel[1] = strtol(token, NULL, 10);
     			token = strtok(NULL,",");
     			i32_travel[2] = strtol(token, NULL, 10);
-    			token = strtok(NULL,",");
-    			i32_travel[3] = strtol(token, NULL, 10);
-    			token = strtok(NULL,",");
-    			i32_travel[4] = strtol(token, NULL, 10);
-    			token = strtok(NULL,",");
-    			i32_travel[5] = strtol(token, NULL, 10);
-    			token = strtok(NULL,",");
+//    			token = strtok(NULL,",");
+//    			i32_travel[3] = strtol(token, NULL, 10);
+//    			token = strtok(NULL,",");
+//    			i32_travel[4] = strtol(token, NULL, 10);
+//    			token = strtok(NULL,",");
+//    			i32_travel[5] = strtol(token, NULL, 10);
+//    			token = strtok(NULL,",");
+
+
 
     			*(int32_t *)i_travel_1 = i32_travel[0];
     			*(int32_t *)i_travel_2 = i32_travel[1];
     			*(int32_t *)i_travel_3 = i32_travel[2];
-    			*(int32_t *)i_travel_4 = i32_travel[3];
-    			*(int32_t *)i_travel_5 = i32_travel[4];
-    			*(int32_t *)i_travel_6 = i32_travel[5];
+//    			*(int32_t *)i_travel_4 = i32_travel[3];
+//    			*(int32_t *)i_travel_5 = i32_travel[4];
+//    			*(int32_t *)i_travel_6 = i32_travel[5];
 
     			i_travel_1++;
     			i_travel_2++;
     			i_travel_3++;
-    			i_travel_4++;
-    			i_travel_5++;
-    			i_travel_6++;
+//    			i_travel_4++;
+//    			i_travel_5++;
+//    			i_travel_6++;
 
 //    			if(u32_count<= 100)
 //    			{
@@ -1336,7 +1882,96 @@ void create_demoClose_shared_objects()
     }
 
     printf("count %d\r\n",u32_count);
-    printf(".csv read complete\r\n");
+
+    /* 	data of DCRM will be in the form d1_v1,d1_c1,d2_v1,d2_c2...... like that */
+
+//	u32_count = 0;
+//    while(fgets(raw_data,5000,fp_dcrm)!= NULL)
+////    while(u32_count < 10)
+//    {
+//    	//fgets(raw_data,5000,fp_coil);
+//    	token = strtok(raw_data,",");
+//    	    		//printf("%s\r\n",token);
+//    	    		//token = strtok(NULL,",");
+//    	while(token != NULL)
+//    	{
+////    		if(u32_count >= 2)
+////    		{
+//    			i32_dcrm[0] = strtol(token, NULL, 10);	// d1_v1
+//    			token = strtok(NULL,",");
+//    			i32_dcrm[1] = strtol(token, NULL, 10);	// d1_c1
+//    			token = strtok(NULL,",");
+//    			i32_dcrm[2] = strtol(token, NULL, 10);	// d2_v1
+//    			token = strtok(NULL,",");
+//    			i32_dcrm[3] = strtol(token, NULL, 10);	// d2_c1
+//    			token = strtok(NULL,",");
+//    			i32_dcrm[4] = strtol(token, NULL, 10);	// d3_v1
+//    			token = strtok(NULL,",");
+//    			i32_dcrm[5] = strtol(token, NULL, 10);	// d3_c1
+//    			token = strtok(NULL,",");
+//    			i32_dcrm[6] = strtol(token, NULL, 10);	// d4_v1
+//    			token = strtok(NULL,",");
+//    			i32_dcrm[7] = strtol(token, NULL, 10);	// d4_c1
+//    			token = strtok(NULL,",");
+//    			i32_dcrm[8] = strtol(token, NULL, 10);	// d5_v1
+//    			token = strtok(NULL,",");
+//    			i32_dcrm[9] = strtol(token, NULL, 10);	// d5_c1
+//    			token = strtok(NULL,",");
+//    			i32_dcrm[10] = strtol(token, NULL, 10);	// d6_v1
+//    			token = strtok(NULL,",");
+//    			i32_dcrm[11] = strtol(token, NULL, 10);	// d6_c1
+//    			token = strtok(NULL,",");
+//
+//    			*(int32_t *)i_dcrm1_v1 = i32_dcrm[0];
+//    			*(int32_t *)i_dcrm1_c1 = i32_dcrm[1];
+//
+//    			*(int32_t *)i_dcrm2_v1 = i32_dcrm[2];
+//    			*(int32_t *)i_dcrm2_c1 = i32_dcrm[3];
+//
+//    			*(int32_t *)i_dcrm3_v1 = i32_dcrm[4];
+//    			*(int32_t *)i_dcrm3_c1 = i32_dcrm[5];
+//
+//    			*(int32_t *)i_dcrm4_v1 = i32_dcrm[6];
+//    			*(int32_t *)i_dcrm4_c1 = i32_dcrm[7];
+//
+//    			*(int32_t *)i_dcrm5_v1 = i32_dcrm[8];
+//    			*(int32_t *)i_dcrm5_c1 = i32_dcrm[9];
+//
+//    			*(int32_t *)i_dcrm6_v1 = i32_dcrm[10];
+//    			*(int32_t *)i_dcrm6_c1 = i32_dcrm[11];
+//
+//    			i_dcrm1_v1++;
+//    			i_dcrm2_v1++;
+//    			i_dcrm3_v1++;
+//    			i_dcrm4_v1++;
+//    			i_dcrm5_v1++;
+//    			i_dcrm6_v1++;
+//
+//    			i_dcrm1_c1++;
+//    			i_dcrm2_c1++;
+//    			i_dcrm3_c1++;
+//    			i_dcrm4_c1++;
+//    			i_dcrm5_c1++;
+//    			i_dcrm6_c1++;
+//
+////    			if(u32_count<= 100)
+////    			{
+//////    				printf("count %d\r\n",u32_count);
+//////    				printf("c1 %d\tc2 %d\tc2 %d\tc4 %d\tc5 %d\tc6 %d\r\n",i32_coil[0],i32_coil[1],i32_coil[2],i32_coil[3],i32_coil[4],i32_coil[5]);
+////
+////    				printf("count %d\r\n",u32_count);
+////    				printf("tc1 %d\tc2 %d\tc2 %d\r\n",i32_travel[0],i32_travel[1],i32_travel[2]);
+////    				//printf("%s\r\n",token);
+////    			}
+////    		}
+//    		token = strtok(NULL,",");
+//    	}
+//    	u32_count++;
+//    }
+
+
+//    printf("count %d\r\n",u32_count);
+//    printf(".csv read complete\r\n");
 
 
 
@@ -1354,25 +1989,32 @@ void create_demoClose_shared_objects()
 //    	data_1++;
 //    }
 
-    if (munmap(mem_1, size) == -1) {
-        perror("Error unmapping shared memory file from memory");
-        return -1;
-    }
+//    if (munmap(mem_1, size) == -1) {
+//        perror("Error unmapping shared memory file from memory");
+//        return -1;
+//    }
 
     // Close the shared memory file
-    if (close(fd_1) == -1) {
-        perror("Error closing shared memory file");
-        return -1;
-    }
+//    if (close(fd_1) == -1) {
+//        perror("Error closing shared memory file");
+//        return -1;
+//    }
 
-    printf("Shared memory file created\r\n");
+    printf("Close CMD data updated\r\n");
+//    printf("Shared memory file created\r\n");
     //printf("u32_count %d\r\n",u32_count);
+
+    system("sync");
+
     fclose(fp);
+    fclose(fp_travel);
+    fclose(fp_aux);
+    fclose(fp_coil);
 
 }
 
 
-void create_dummyOpen_shared_objects()
+void update_dummyOpen_shared_objects()
 {
 	FILE *fp,*fp_coil,*fp_aux,*fp_travel;
 	char raw_data[5000];
@@ -1467,6 +2109,7 @@ void create_dummyOpen_shared_objects()
 		u32_value = 0;
 	}
 
+	printf("count %d\r\n",u32_count);
 	printf("Main PIR object created\r\n");
 
 	/*	Below code is for extracting the Auxilary Contact values from the .csv file */
@@ -1509,7 +2152,7 @@ void create_dummyOpen_shared_objects()
 		u32_value = 0;
 	}
 
-
+	printf("count %d\r\n",u32_count);
 
 	u32_count = 0;
     while(fgets(raw_data,5000,fp_coil)!= NULL)
@@ -1561,6 +2204,8 @@ void create_dummyOpen_shared_objects()
     	}
     	u32_count++;
     }
+
+    printf("count %d\r\n",u32_count);
 
 	u32_count = 0;
     while(fgets(raw_data,5000,fp_travel)!= NULL)
@@ -1616,7 +2261,352 @@ void create_dummyOpen_shared_objects()
     	u32_count++;
     }
 
+
     printf("count %d\r\n",u32_count);
-    printf(".csv read complete\r\n");
+    printf("Open CMD data updated\r\n");
+    //printf(".csv read complete\r\n");
+}
+
+void update_dummyDCRM_shared_objects()
+{
+	FILE *fp_dcrm,*fp_coil,*fp_travel;
+	char raw_data[5000];
+	char *token;
+
+	int32_t i32_dcrm[12] = {0},
+			i32_travel[6] = {0},
+			i32_coil[6] = {0};
+
+	uint32_t u32_count = 0;
+
+
+    int32_t* i_dcrm1_v1 = (int32_t*)dcrm1_v1;
+    int32_t* i_dcrm2_v1 = (int32_t*)dcrm2_v1;
+    int32_t* i_dcrm3_v1 = (int32_t*)dcrm3_v1;
+    int32_t* i_dcrm4_v1 = (int32_t*)dcrm4_v1;
+    int32_t* i_dcrm5_v1 = (int32_t*)dcrm5_v1;
+    int32_t* i_dcrm6_v1 = (int32_t*)dcrm6_v1;
+
+    int32_t* i_dcrm1_c1 = (int32_t*)dcrm1_c1;
+    int32_t* i_dcrm2_c1 = (int32_t*)dcrm2_c1;
+    int32_t* i_dcrm3_c1 = (int32_t*)dcrm3_c1;
+    int32_t* i_dcrm4_c1 = (int32_t*)dcrm4_c1;
+    int32_t* i_dcrm5_c1 = (int32_t*)dcrm5_c1;
+    int32_t* i_dcrm6_c1 = (int32_t*)dcrm6_c1;
+
+    int32_t* i_coil_1 = (int32_t*)coil_1;
+    int32_t* i_coil_2 = (int32_t*)coil_2;
+    int32_t* i_coil_3 = (int32_t*)coil_3;
+    int32_t* i_coil_4 = (int32_t*)coil_4;
+    int32_t* i_coil_5 = (int32_t*)coil_5;
+    int32_t* i_coil_6 = (int32_t*)coil_6;
+
+    int32_t* i_travel_1 = (int32_t*)travel_1;
+    int32_t* i_travel_2 = (int32_t*)travel_2;
+    int32_t* i_travel_3 = (int32_t*)travel_3;
+    int32_t* i_travel_4 = (int32_t*)travel_4;
+    int32_t* i_travel_5 = (int32_t*)travel_5;
+    int32_t* i_travel_6 = (int32_t*)travel_6;
+
+//    for(int count = 0 ; count < 8000 ; count++)
+//    {
+//    	*(int32_t*)i_coil_1 = 0x00000000;
+//    	i_coil_1++;
+//    }
+//    for(int count = 0 ; count < 8000 ; count++)
+//    {
+//    	*(int32_t*)i_coil_2 = 0x00000000;
+//    	i_coil_2++;
+//    }
+//    for(int count = 0 ; count < 8000 ; count++)
+//    {
+//    	*(int32_t*)i_coil_3 = 0x00000000;
+//    	i_coil_3++;
+//    }
+//    for(int count = 0 ; count < 8000 ; count++)
+//    {
+//    	*(int32_t*)i_coil_4 = 0x00000000;
+//    	i_coil_4++;
+//    }
+//    for(int count = 0 ; count < 8000 ; count++)
+//    {
+//    	*(int32_t*)i_coil_5 = 0x00000000;
+//    	i_coil_5++;
+//    }
+//    for(int count = 0 ; count < 8000 ; count++)
+//    {
+//    	*(int32_t*)i_coil_6 = 0x00000000;
+//    	i_coil_6++;
+//    }
+//
+//
+//    for(int count = 0 ; count < 8000 ; count++)
+//    {
+//    	*(int32_t*)i_travel_1 = 0x00000000;
+//    	i_travel_1++;
+//    }
+//    for(int count = 0 ; count < 8000 ; count++)
+//    {
+//    	*(int32_t*)i_travel_2 = 0x00000000;
+//    	i_travel_2++;
+//    }
+//    for(int count = 0 ; count < 8000 ; count++)
+//    {
+//    	*(int32_t*)i_travel_3 = 0x00000000;
+//    	i_travel_3++;
+//    }
+//    for(int count = 0 ; count < 8000 ; count++)
+//    {
+//    	*(int32_t*)i_travel_4 = 0x00000000;
+//    	i_travel_4++;
+//    }
+//    for(int count = 0 ; count < 8000 ; count++)
+//    {
+//    	*(int32_t*)i_travel_5 = 0x00000000;
+//    	i_travel_5++;
+//    }
+//    for(int count = 0 ; count < 8000 ; count++)
+//    {
+//    	*(int32_t*)i_travel_6 = 0x00000000;
+//    	i_travel_6++;
+//    }
+
+//    i_coil_1 = (int32_t*)coil_1;
+//    i_coil_2 = (int32_t*)coil_2;
+//    i_coil_3 = (int32_t*)coil_3;
+//    i_coil_4 = (int32_t*)coil_4;
+//    i_coil_5 = (int32_t*)coil_5;
+//    i_coil_6 = (int32_t*)coil_6;
+//
+//    i_travel_1 = (int32_t*)travel_1;
+//    i_travel_2 = (int32_t*)travel_2;
+//    i_travel_3 = (int32_t*)travel_3;
+//    i_travel_4 = (int32_t*)travel_4;
+//    i_travel_5 = (int32_t*)travel_5;
+//    i_travel_6 = (int32_t*)travel_6;
+
+
+	fp_dcrm = fopen("/home/root/Demo_data/DCRM/DCRM.csv","r");
+	if(fp_dcrm == NULL)
+	{
+		printf("Error in opening DCRM data file\r\n");
+	}
+
+	fp_coil = fopen("/home/root/Demo_data/DCRM/Coil_current.csv","r");
+	if(fp_coil == NULL)
+	{
+		printf("Error in opening coil_current file\r\n");
+	}
+
+	fp_travel = fopen("/home/root/Demo_data/DCRM/Travel.csv","r");
+	if(fp_travel == NULL)
+	{
+		printf("Error in opening Travel data file\r\n");
+	}
+
+    /* 	data of DCRM will be in the form d1_v1,d1_c1,d2_v1,d2_c2...... like that */
+
+	u32_count = 0;
+    while(fgets(raw_data,5000,fp_dcrm)!= NULL)
+//    while(u32_count < 10)
+    {
+    	//fgets(raw_data,5000,fp_coil);
+    	token = strtok(raw_data,",");
+    	    		//printf("%s\r\n",token);
+    	    		//token = strtok(NULL,",");
+    	while(token != NULL)
+    	{
+//    		if(u32_count >= 2)
+//    		{
+    			i32_dcrm[0] = strtol(token, NULL, 10);	// d1_v1
+    			token = strtok(NULL,",");
+    			i32_dcrm[1] = strtol(token, NULL, 10);	// d1_c1
+    			token = strtok(NULL,",");
+    			i32_dcrm[2] = strtol(token, NULL, 10);	// d2_v1
+    			token = strtok(NULL,",");
+    			i32_dcrm[3] = strtol(token, NULL, 10);	// d2_c1
+    			token = strtok(NULL,",");
+    			i32_dcrm[4] = strtol(token, NULL, 10);	// d3_v1
+    			token = strtok(NULL,",");
+    			i32_dcrm[5] = strtol(token, NULL, 10);	// d3_c1
+    			token = strtok(NULL,",");
+    			i32_dcrm[6] = strtol(token, NULL, 10);	// d4_v1
+    			token = strtok(NULL,",");
+    			i32_dcrm[7] = strtol(token, NULL, 10);	// d4_c1
+    			token = strtok(NULL,",");
+    			i32_dcrm[8] = strtol(token, NULL, 10);	// d5_v1
+    			token = strtok(NULL,",");
+    			i32_dcrm[9] = strtol(token, NULL, 10);	// d5_c1
+    			token = strtok(NULL,",");
+    			i32_dcrm[10] = strtol(token, NULL, 10);	// d6_v1
+    			token = strtok(NULL,",");
+    			i32_dcrm[11] = strtol(token, NULL, 10);	// d6_c1
+//    			token = strtok(NULL,",");
+
+    			*(int32_t *)i_dcrm1_v1 = i32_dcrm[0];
+    			*(int32_t *)i_dcrm1_c1 = i32_dcrm[1];
+
+    			*(int32_t *)i_dcrm2_v1 = i32_dcrm[2];
+    			*(int32_t *)i_dcrm2_c1 = i32_dcrm[3];
+
+    			*(int32_t *)i_dcrm3_v1 = i32_dcrm[4];
+    			*(int32_t *)i_dcrm3_c1 = i32_dcrm[5];
+
+    			*(int32_t *)i_dcrm4_v1 = i32_dcrm[6];
+    			*(int32_t *)i_dcrm4_c1 = i32_dcrm[7];
+
+    			*(int32_t *)i_dcrm5_v1 = i32_dcrm[8];
+    			*(int32_t *)i_dcrm5_c1 = i32_dcrm[9];
+
+    			*(int32_t *)i_dcrm6_v1 = i32_dcrm[10];
+    			*(int32_t *)i_dcrm6_c1 = i32_dcrm[11];
+
+    			i_dcrm1_v1++;
+    			i_dcrm2_v1++;
+    			i_dcrm3_v1++;
+    			i_dcrm4_v1++;
+    			i_dcrm5_v1++;
+    			i_dcrm6_v1++;
+
+    			i_dcrm1_c1++;
+    			i_dcrm2_c1++;
+    			i_dcrm3_c1++;
+    			i_dcrm4_c1++;
+    			i_dcrm5_c1++;
+    			i_dcrm6_c1++;
+
+//    			if(u32_count<= 100)
+//    			{
+////    				printf("count %d\r\n",u32_count);
+////    				printf("c1 %d\tc2 %d\tc2 %d\tc4 %d\tc5 %d\tc6 %d\r\n",i32_coil[0],i32_coil[1],i32_coil[2],i32_coil[3],i32_coil[4],i32_coil[5]);
+//
+//    				printf("count %d\r\n",u32_count);
+//    				printf("tc1 %d\tc2 %d\tc2 %d\r\n",i32_travel[0],i32_travel[1],i32_travel[2]);
+//    				//printf("%s\r\n",token);
+//    			}
+//    		}
+    		token = strtok(NULL,",");
+    	}
+    	u32_count++;
+    }
+
+    printf("count %d\r\n",u32_count);
+
+	u32_count = 0;
+    while(fgets(raw_data,5000,fp_travel)!= NULL)
+//    while(u32_count < 10)
+    {
+    	//fgets(raw_data,5000,fp_coil);
+    	token = strtok(raw_data,",");
+    	    		//printf("%s\r\n",token);
+    	    		//token = strtok(NULL,",");
+    	while(token != NULL)
+    	{
+//    		if(u32_count >= 2)
+//    		{
+    			i32_travel[0] = strtol(token, NULL, 10);
+    			token = strtok(NULL,",");
+    			i32_travel[1] = strtol(token, NULL, 10);
+    			token = strtok(NULL,",");
+    			i32_travel[2] = strtol(token, NULL, 10);
+//    			token = strtok(NULL,",");
+//    			i32_travel[3] = strtol(token, NULL, 10);
+//    			token = strtok(NULL,",");
+//    			i32_travel[4] = strtol(token, NULL, 10);
+//    			token = strtok(NULL,",");
+//    			i32_travel[5] = strtol(token, NULL, 10);
+//    			token = strtok(NULL,",");
+
+    			*(int32_t *)i_travel_1 = i32_travel[0];
+    			*(int32_t *)i_travel_2 = i32_travel[1];
+    			*(int32_t *)i_travel_3 = i32_travel[2];
+//    			*(int32_t *)i_travel_4 = i32_travel[3];
+//    			*(int32_t *)i_travel_5 = i32_travel[4];
+//    			*(int32_t *)i_travel_6 = i32_travel[5];
+
+    			i_travel_1++;
+    			i_travel_2++;
+    			i_travel_3++;
+//    			i_travel_4++;
+//    			i_travel_5++;
+//    			i_travel_6++;
+
+//    			if(u32_count<= 100)
+//    			{
+////    				printf("count %d\r\n",u32_count);
+////    				printf("c1 %d\tc2 %d\tc2 %d\tc4 %d\tc5 %d\tc6 %d\r\n",i32_coil[0],i32_coil[1],i32_coil[2],i32_coil[3],i32_coil[4],i32_coil[5]);
+//
+//    				printf("count %d\r\n",u32_count);
+//    				printf("tc1 %d\tc2 %d\tc2 %d\r\n",i32_travel[0],i32_travel[1],i32_travel[2]);
+//    				//printf("%s\r\n",token);
+//    			}
+//    		}
+    		token = strtok(NULL,",");
+    	}
+    	u32_count++;
+    }
+
+    printf("count %d\r\n",u32_count);
+
+	u32_count = 0;
+    while(fgets(raw_data,5000,fp_coil)!= NULL)
+//    while(u32_count < 10)
+    {
+    	//fgets(raw_data,5000,fp_coil);
+    	token = strtok(raw_data,",");
+//    	    		printf("%s\r\n",token);
+    	    		//token = strtok(NULL,",");
+    	while(token != NULL)
+    	{
+//    		if(u32_count >= 2)
+//    		{
+    			i32_coil[0] = strtol(token, NULL, 10);
+    			token = strtok(NULL,",");
+    			i32_coil[1] = strtol(token, NULL, 10);
+    			token = strtok(NULL,",");
+    			i32_coil[2] = strtol(token, NULL, 10);
+    			token = strtok(NULL,",");
+    			i32_coil[3] = strtol(token, NULL, 10);
+    			token = strtok(NULL,",");
+    			i32_coil[4] = strtol(token, NULL, 10);
+    			token = strtok(NULL,",");
+    			i32_coil[5] = strtol(token, NULL, 10);
+    			//token = strtok(NULL,",");
+
+    			*(int32_t *)i_coil_1 = i32_coil[0];
+    			*(int32_t *)i_coil_2 = i32_coil[1];
+    			*(int32_t *)i_coil_3 = i32_coil[2];
+    			*(int32_t *)i_coil_4 = i32_coil[3];
+    			*(int32_t *)i_coil_5 = i32_coil[4];
+    			*(int32_t *)i_coil_6 = i32_coil[5];
+
+    			i_coil_1++;
+				i_coil_2++;
+				i_coil_3++;
+				i_coil_4++;
+				i_coil_5++;
+				i_coil_6++;
+
+//    			if(u32_count>= 1000)
+//    			{
+//    				printf("count %d\r\n",u32_count);
+//    				printf("c1 %d\tc2 %d\tc2 %d\tc4 %d\tc5 %d\tc6 %d\r\n",i32_coil[0],i32_coil[1],i32_coil[2],i32_coil[3],i32_coil[4],i32_coil[5]);
+//    				//printf("%s\r\n",token);
+//    			}
+//    		}
+    		token = strtok(NULL,",");
+    	}
+    	u32_count++;
+    }
+
+    printf("count %d\r\n",u32_count);
+
+    fclose(fp_travel);
+    fclose(fp_dcrm);
+    fclose(fp_coil);
+
+    system("sync");
+
+    printf("DCRM CMD data updated\r\n");
 
 }
